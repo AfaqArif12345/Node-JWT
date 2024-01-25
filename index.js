@@ -1,17 +1,23 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const authRoutes = require("./routes/authRoutes");
+require("dotenv").config();
 
 const app = express();
 
 app.use(express.static("public"));
+app.use(express.json());
 
 app.set("view engine", "ejs");
 
 //db connection
 
 const dbURI =
-  "mongodb+srv://muhammadafaqarif97:ABR5Jar8t1wtq1Za@cluster1.pzzkepq.mongodb.net/node-jwt-tutorial-1";
+  "mongodb+srv://" +
+  process.env.USER_NAME +
+  ":" +
+  process.env.PASSWORD +
+  "@cluster1.pzzkepq.mongodb.net/node-jwt-tutorial-1";
 
 mongoose
   .connect(dbURI)
