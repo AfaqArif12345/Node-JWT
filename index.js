@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const authRoutes = require("./routes/authRoutes");
 require("dotenv").config();
 const cookieParser = require("cookie-parser");
+const { requireAuth, checkUser } = require("./middleware/authMiddleware");
 
 const app = express();
 
@@ -28,27 +29,31 @@ mongoose
   )
   .catch((err) => console.log(err));
 
+app.get("*", checkUser);
+
 app.get("/", (req, res) => {
   res.render("home");
 });
-app.get("/smoothies", (req, res) => {
+app.get("/smoothies", requireAuth, (req, res) => {
   res.render("smoothies");
 });
 
 app.use(authRoutes);
 
-app.get("/set-cookies", (req, res) => {
-  // res.setHeader("Set-Cookie", "newUser=true");
-  res.cookie("newUser", false);
-  res.cookie("isEmployee", true, {
-    maxAge: 1000 * 60 * 60 * 24,
-    httpOnly: true,
-  });
-  res.send("you got cookies");
-});
+// get get cookies manually
 
-app.get("/read-cookies", (req, res) => {
-  const cookies = req.cookies;
-  // console.log("cookies : ", cookies);
-  res.send("you read cookies");
-});
+// app.get("/set-cookies", (req, res) => {
+//   // res.setHeader("Set-Cookie", "newUser=true");
+//   res.cookie("newUser", false);
+//   res.cookie("isEmployee", true, {
+//     maxAge: 1000 * 60 * 60 * 24,
+//     httpOnly: true,
+//   });
+//   res.send("you got cookies");
+// });
+
+// app.get("/read-cookies", (req, res) => {
+//   const cookies = req.cookies;
+//   // console.log("cookies : ", cookies);
+//   res.send("you read cookies");
+// });
